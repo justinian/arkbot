@@ -12,9 +12,9 @@ channel id, and list of servers as environment variables.
 ```bash
 docker run -d \
     -e ARKBOT_TOKEN="XXXXXXXXXXXXXXXXXXX" \
-	-e ARKBOT_CHANNEL="01234567890" \
-	-e ARKBOT_SERVERS="my.server.com:12345,my.other.server.com:56789" \
-	--name=arkbot justinian/arkbot
+    -e ARKBOT_CHANNEL="01234567890" \
+    -e ARKBOT_SERVERS="my.server.com:12345,my.other.server.com:56789" \
+    --name=arkbot justinian/arkbot
 ```
 
 ## Thanks
