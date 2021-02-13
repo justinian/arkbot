@@ -45,9 +45,10 @@ func main() {
 	for _, s := range c.Servers {
 		log.Printf("Monitoring server %s", s)
 	}
+	log.Printf("Updating every %s", c.Rate)
 
 	closer := make(chan bool)
-	go runTracker(dg, c.Channel, c.Servers, closer)
+	go runTracker(dg, c.Channel, c.Servers, c.Rate, closer)
 
 	// Open the websocket and begin listening.
 	err = dg.Open()

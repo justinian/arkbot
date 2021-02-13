@@ -8,8 +8,6 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-const period time.Duration = 10 * time.Second
-
 // find the previous update to edit
 func findMyMessage(s *discordgo.Session, channel, me string) (string, error) {
 	before := ""
@@ -77,8 +75,8 @@ func checkAllServers(s *discordgo.Session, me, channel string, servers []string)
 	}
 }
 
-func runTracker(s *discordgo.Session, channel string, servers []string, closer <-chan bool) {
-	t := time.Tick(period)
+func runTracker(s *discordgo.Session, channel string, servers []string, rate time.Duration, closer <-chan bool) {
+	t := time.Tick(rate)
 
 	user, err := s.User("@me")
 	if err != nil {
