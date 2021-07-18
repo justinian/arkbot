@@ -16,6 +16,7 @@ type Config struct {
 	Channel string
 	Servers []string
 	Rate    time.Duration
+	Verbose bool
 }
 
 var defaultConfig = Config{
@@ -48,7 +49,7 @@ func main() {
 	log.Printf("Updating every %s", c.Rate)
 
 	closer := make(chan bool)
-	go runTracker(dg, c.Channel, c.Servers, c.Rate, closer)
+	go runTracker(dg, &c, closer)
 
 	// Open the websocket and begin listening.
 	err = dg.Open()
@@ -65,4 +66,5 @@ func main() {
 	// Cleanly close down the Discord session.
 	closer <- true
 	dg.Close()
+	log.Print("arkbot shutting down.")
 }

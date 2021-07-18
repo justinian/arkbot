@@ -34,7 +34,7 @@ func findMyMessage(s *discordgo.Session, channel, me string) (string, error) {
 	return "", nil
 }
 
-func checkAllServers(s *discordgo.Session, me, channel string, servers []string) {
+func checkAllServers(s *discordgo.Session, me, channel string, servers []string, verbose bool) {
 	toUpdate, err := findMyMessage(s, channel, me)
 	if err != nil {
 		log.Print(err)
@@ -50,8 +50,12 @@ func checkAllServers(s *discordgo.Session, me, channel string, servers []string)
 	}
 
 	for _, s := range servers {
-		server, err := checkServer(s)
+		server, err := checkServer(s, verbose)
 		if err != nil {
+			log.Printf("Error checking %s: %s", s, err)
+		}
+
+		if server == nil {
 			continue
 		}
 
@@ -75,8 +79,8 @@ func checkAllServers(s *discordgo.Session, me, channel string, servers []string)
 	}
 }
 
-func runTracker(s *discordgo.Session, channel string, servers []string, rate time.Duration, closer <-chan bool) {
-	t := time.Tick(rate)
+func runTracker(s *discordgo.Session, c *Config, closer <-chan bool) {
+	t := time.Tick(c.Rate)
 
 	user, err := s.User("@me")
 	if err != nil {
@@ -84,7 +88,7 @@ func runTracker(s *discordgo.Session, channel string, servers []string, rate tim
 	}
 
 	for {
-		checkAllServers(s, user.ID, channel, servers)
+		checkAllServers(s, user.ID, c.Channel, c.Servers, c.Verbose)
 		select {
 		case <-t:
 			continue
